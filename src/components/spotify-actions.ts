@@ -18,9 +18,7 @@ export async function auth() {
   redirect(response.url)
 }
 
-export async function getRefreshToken({ code }: { code: string }) {
-  // const refreshToken = localStorage.getItem("refresh_token") ?? ""
-
+export async function requestAccessToken({ code }: { code: string }) {
   const url = "https://accounts.spotify.com/api/token"
 
   const payload = {
@@ -39,32 +37,31 @@ export async function getRefreshToken({ code }: { code: string }) {
   const body = await fetch(url, payload)
   const response = await body.json()
 
-  localStorage.setItem("access_token", response.body.accessToken)
-  localStorage.setItem("refresh_token", response.body.refreshToken)
-
-  redirect(response.url)
+  return response
 }
 
-export async function refreshAccessToken({ code }: { code: string }) {
-  const refreshToken = localStorage.getItem("refresh_token") ?? ""
+// export async function refreshAccessToken({ code }: { code: string }) {
+//   const refreshToken = localStorage.getItem("refresh_token") ?? ""
 
-  const url = "https://accounts.spotify.com/api/token"
+//   const url = "https://accounts.spotify.com/api/token"
 
-  const payload = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: `Basic ${Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString("base64")}`,
-    },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: refreshToken,
-    }),
-  }
+//   const payload = {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/x-www-form-urlencoded",
+//       Authorization: `Basic ${Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString("base64")}`,
+//     },
+//     body: new URLSearchParams({
+//       grant_type: "refresh_token",
+//       refresh_token: refreshToken,
+//     }),
+//   }
 
-  const body = await fetch(url, payload)
-  const response = await body.json()
+//   const body = await fetch(url, payload)
+//   const response = await body.json()
 
-  localStorage.setItem("access_token", response.body.accessToken)
-  localStorage.setItem("refresh_token", response.body.refreshToken)
-}
+//   console.log(response.body)
+
+//   // localStorage.setItem("access_token", response.body.accessToken)
+//   // localStorage.setItem("refresh_token", response.body.refreshToken)
+// }
