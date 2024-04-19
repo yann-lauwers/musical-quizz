@@ -1,6 +1,6 @@
 "use client"
 
-import { authorize } from "@/components/spotify-actions"
+import { authorize } from "@/utils/spotify-authorizations"
 
 export default function Home() {
   return (

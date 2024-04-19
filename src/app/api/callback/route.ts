@@ -1,4 +1,4 @@
-import { requestAccessToken } from "@/components/spotify-actions"
+import { requestAccessToken } from "@/utils/spotify-authorizations"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {

@@ -1,15 +1,14 @@
-"use client"
+import { cookies } from "next/headers"
+import { getCurrentUserProfile } from "@/utils/spotify"
 
-import { authorize } from "@/components/spotify-actions"
+export default async function Home() {
+  const accessToken = cookies().get("spotify_access_token")?.value
+  const profile = await getCurrentUserProfile(accessToken ?? "")
 
-export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>
-        <button onClick={async () => await authorize()} className="bg-green-500 p-2 hover:bg-green-400">
-          Connecté
-        </button>
-      </div>
+      <div>Connecté</div>
+      <h1>{profile.display_name}</h1>
     </main>
   )
 }

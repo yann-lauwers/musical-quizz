@@ -4,13 +4,15 @@ import { spotifyAccessTokenSchema, spotifyRefreshTokenSchema } from "@/app/schem
 import { redirect } from "next/navigation"
 import { z } from "zod"
 
+const SCOPE = "user-read-private user-read-email"
+
 // https://developer.spotify.com/documentation/web-api/tutorials/code-flow
 export async function authorize() {
   const params = {
     client_id: process.env.SPOTIFY_CLIENT_ID ?? "",
     response_type: "code",
     redirect_uri: "http://localhost:3000/api/callback",
-    scope: "user-read-private user-read-email user-read-currently-playing user-top-read",
+    scope: SCOPE,
   }
 
   const queryParams = new URLSearchParams(params)

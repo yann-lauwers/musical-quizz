@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server"
-import { refreshAccessToken } from "./components/spotify-actions"
+import { refreshAccessToken } from "./utils/spotify-authorizations"
 
 // https://medium.com/@fran_wrote/fetch-with-token-and-refresh-in-next-js-60fd13c6f1b1
 export async function middleware(req: NextRequest) {
