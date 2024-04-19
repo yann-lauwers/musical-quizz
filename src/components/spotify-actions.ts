@@ -1,12 +1,15 @@
 "use server"
 
+import { spotifyAccessTokenSchema, spotifyRefreshTokenSchema } from "@/app/schemas/spotify"
 import { redirect } from "next/navigation"
+import { z } from "zod"
 
-export async function auth() {
+// https://developer.spotify.com/documentation/web-api/tutorials/code-flow
+export async function authorize() {
   const params = {
     client_id: process.env.SPOTIFY_CLIENT_ID ?? "",
     response_type: "code",
-    redirect_uri: "http://localhost:3000/callback",
+    redirect_uri: "http://localhost:3000/api/callback",
     scope: "user-read-private user-read-email user-read-currently-playing user-top-read",
   }
 
@@ -18,7 +21,8 @@ export async function auth() {
   redirect(response.url)
 }
 
-export async function requestAccessToken({ code }: { code: string }) {
+// https://developer.spotify.com/documentation/web-api/tutorials/code-flow
+export async function requestAccessToken({ code }: { code: string }): Promise<z.infer<typeof spotifyAccessTokenSchema>> {
   const url = "https://accounts.spotify.com/api/token"
 
   const payload = {
@@ -30,38 +34,39 @@ export async function requestAccessToken({ code }: { code: string }) {
     body: new URLSearchParams({
       grant_type: "authorization_code",
       code: code,
-      redirect_uri: "http://localhost:3000/callback",
+      redirect_uri: "http://localhost:3000/api/callback",
     }),
   }
 
   const body = await fetch(url, payload)
   const response = await body.json()
 
-  return response
+  const parsedResponse = spotifyAccessTokenSchema.parse(response)
+
+  return parsedResponse
 }
 
-// export async function refreshAccessToken({ code }: { code: string }) {
-//   const refreshToken = localStorage.getItem("refresh_token") ?? ""
+// https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens
+export async function refreshAccessToken({ refreshToken }: { refreshToken: string }): Promise<z.infer<typeof spotifyRefreshTokenSchema>> {
+  const url = "https://accounts.spotify.com/api/token"
 
-//   const url = "https://accounts.spotify.com/api/token"
+  const payload = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Basic ${Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString("base64")}`,
+    },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+    }),
+  }
 
-//   const payload = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/x-www-form-urlencoded",
-//       Authorization: `Basic ${Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString("base64")}`,
-//     },
-//     body: new URLSearchParams({
-//       grant_type: "refresh_token",
-//       refresh_token: refreshToken,
-//     }),
-//   }
+  const body = await fetch(url, payload)
 
-//   const body = await fetch(url, payload)
-//   const response = await body.json()
+  const response = await body.json()
 
-//   console.log(response.body)
+  const parsedResponse = spotifyRefreshTokenSchema.parse(response)
 
-//   // localStorage.setItem("access_token", response.body.accessToken)
-//   // localStorage.setItem("refresh_token", response.body.refreshToken)
-// }
+  return parsedResponse
+}
