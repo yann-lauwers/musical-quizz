@@ -8,9 +8,14 @@ export async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("spotify_access_token")
   const refreshToken = req.cookies.get("spotify_refresh_token")
 
-  if (pathname !== "/" && !accessToken && !refreshToken) return NextResponse.redirect(new URL("/", req.url))
+  const isAuthenticated = accessToken && refreshToken
 
-  if (!accessToken && refreshToken) {
+  if (pathname !== "/auth" && !isAuthenticated) return NextResponse.redirect(new URL("/auth", req.url))
+
+  if (pathname === "/auth" && isAuthenticated) return NextResponse.redirect(new URL("/", req.url))
+
+  const needNewToken = !accessToken && refreshToken
+  if (needNewToken) {
     const newAccessToken = await refreshAccessToken({ refreshToken: refreshToken?.value ?? "" })
 
     const response = NextResponse.next()
