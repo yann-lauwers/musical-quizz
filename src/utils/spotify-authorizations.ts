@@ -1,10 +1,9 @@
 "use server"
 
+import { SCOPE } from "@/app/constants/spotify"
 import { spotifyAccessTokenSchema, spotifyRefreshTokenSchema } from "@/app/schemas/spotify"
 import { redirect } from "next/navigation"
 import { z } from "zod"
-
-const SCOPE = "user-read-private user-read-email"
 
 // https://developer.spotify.com/documentation/web-api/tutorials/code-flow
 export async function authorize() {
