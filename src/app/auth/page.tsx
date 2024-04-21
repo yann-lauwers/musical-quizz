@@ -4,12 +4,10 @@ import { authorize } from "@/utils/spotify-authorizations"
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>
-        <button onClick={async () => await authorize()} className="bg-green-500 p-2 hover:bg-green-400">
-          Auth
-        </button>
-      </div>
-    </main>
+    <div className="m-auto">
+      <button onClick={async () => await authorize()} className="bg-[#24d44e] text-black rounded-full py-4 px-8 font-semibold hover:scale-105">
+        Me connecter avec Spotify
+      </button>
+    </div>
   )
 }

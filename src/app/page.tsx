@@ -1,6 +1,9 @@
 import { cookies } from "next/headers"
 import { getAvailableDevices, getCurrentUserProfile, getPlaybackState, startResumePlayback } from "@/utils/spotify"
 import { StartResumeButton } from "@/components/start-resume-button"
+import Image from "next/image"
+import { SignOutButton } from "@/components/signout-button"
+import { SPOTIFY_API_ROOT_URL } from "./constants/spotify"
 
 export default async function Home() {
   const accessToken = cookies().get("spotify_access_token")?.value ?? ""
@@ -17,10 +20,32 @@ export default async function Home() {
     // ...
   }
 
+  // FIXME: This doesnt work
+  async function signOut() {
+    "use server"
+
+    await fetch("http://localhost:3000/api/sign-out", { method: "GET" })
+  }
+
   return (
-    <main className="min-h-screen justify-center p-24">
-      <h1 className="mb-4">Connecté en tant que {profile.display_name}</h1>
-      <p className="mb-10 italic">Avoir spotify ouvert sur son ordi</p>
+    <div className="w-full">
+      <div className="text-center bg-gradient-to-b from-[rgb(16,16,16)] to">
+        <p className="italic text-sm py-1">Veillez à garder l&apos;application ouverte sur le compte connecté </p>
+      </div>
+      <div className="px-8 py-2 flex justify-between items-center mb-10">
+        {profile?.images?.[0] ? (
+          <SignOutButton signOut={signOut} profile={profile} />
+        ) : (
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-[#24d44e] rounded-full" />
+            <p>
+              Connecté en tant que <span className="font-medium">{profile?.display_name}</span>
+            </p>
+          </div>
+        )}
+        <div></div>
+      </div>
+
       <div className="space-y-2 mb-10">
         <h2>Appareils disponibles</h2>
         <ul>
@@ -46,6 +71,6 @@ export default async function Home() {
           <p>Aucune lecture en cours</p>
         )}
       </div>
-    </main>
+    </div>
   )
 }

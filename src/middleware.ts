@@ -8,9 +8,16 @@ export async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("spotify_access_token")
   const refreshToken = req.cookies.get("spotify_refresh_token")
 
-  const isAuthenticated = accessToken && refreshToken
+  const isAuthenticated = !!(accessToken && refreshToken)
 
-  if (pathname !== "/auth" && !isAuthenticated) return NextResponse.redirect(new URL("/auth", req.url))
+  console.log({ isAuthenticated })
+
+  console.log("MIDDLEWARE")
+
+  if (pathname !== "/auth" && !isAuthenticated) {
+    console.log("NOT AUTH MIDDLEWARE")
+    return NextResponse.redirect(new URL("/auth", req.url))
+  }
 
   if (pathname === "/auth" && isAuthenticated) return NextResponse.redirect(new URL("/", req.url))
 
@@ -20,12 +27,14 @@ export async function middleware(req: NextRequest) {
 
     const response = NextResponse.next()
 
-    response.cookies.set({
-      name: "spotify_access_token",
-      value: newAccessToken.access_token,
-      httpOnly: true,
-      maxAge: newAccessToken.expires_in,
-    })
+    if (newAccessToken) {
+      response.cookies.set({
+        name: "spotify_access_token",
+        value: newAccessToken.access_token,
+        httpOnly: true,
+        maxAge: newAccessToken.expires_in,
+      })
+    }
 
     return response
   }
