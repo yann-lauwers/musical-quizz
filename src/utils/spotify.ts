@@ -9,10 +9,7 @@ export const getCurrentUserProfile = async (accessToken: string): Promise<z.infe
   }
 
   try {
-    // TODO: Check if I can replace by
-    // const profile = await fetch(API_ROOT_URL + "/me", headers).then(resp => resp.json())
-    const request = await fetch(SPOTIFY_API_ROOT_URL + "/me", headers)
-    const profile = await request.json()
+    const profile = await fetch(SPOTIFY_API_ROOT_URL + "/me", headers).then(resp => resp.json())
     const parsedProfile = currentUserProfileSchema.parse(profile)
     return parsedProfile
   } catch (err) {
@@ -28,8 +25,7 @@ export const getAvailableDevices = async (accessToken: string): Promise<z.infer<
   }
 
   try {
-    const request = await fetch(SPOTIFY_API_ROOT_URL + "/me/player/devices", headers)
-    const availableDevices = await request.json()
+    const availableDevices = await fetch(SPOTIFY_API_ROOT_URL + "/me/player/devices", headers).then(resp => resp.json())
     const parsedAvailableDevices = availableDevicesSchema.parse(availableDevices)
     return parsedAvailableDevices
   } catch (err) {

@@ -1,9 +1,8 @@
 import { cookies } from "next/headers"
 import { getAvailableDevices, getCurrentUserProfile, getPlaybackState, startResumePlayback } from "@/utils/spotify"
 import { StartResumeButton } from "@/components/start-resume-button"
-import Image from "next/image"
 import { SignOutButton } from "@/components/signout-button"
-import { SPOTIFY_API_ROOT_URL } from "./constants/spotify"
+import { redirect } from "next/navigation"
 
 export default async function Home() {
   const accessToken = cookies().get("spotify_access_token")?.value ?? ""
@@ -16,15 +15,15 @@ export default async function Home() {
 
     const accessToken = cookies().get("spotify_access_token")?.value ?? ""
     const a = await startResumePlayback(accessToken, "87184c552c056d656bba57dc1ac9b0130a9f8134")
-    console.log(a)
-    // ...
   }
 
-  // FIXME: This doesnt work
   async function signOut() {
     "use server"
 
-    await fetch("http://localhost:3000/api/sign-out", { method: "GET" })
+    cookies().delete("spotify_refresh_token")
+    cookies().delete("spotify_access_token")
+
+    redirect("/auth")
   }
 
   return (

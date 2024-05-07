@@ -3,19 +3,15 @@ import { refreshAccessToken } from "./utils/spotify-authorizations"
 
 // https://medium.com/@fran_wrote/fetch-with-token-and-refresh-in-next-js-60fd13c6f1b1
 export async function middleware(req: NextRequest) {
-  const pathname = new URL(req.url).pathname
+  const url = new URL(req.url)
+  const pathname = url.pathname
 
   const accessToken = req.cookies.get("spotify_access_token")
   const refreshToken = req.cookies.get("spotify_refresh_token")
 
   const isAuthenticated = !!(accessToken && refreshToken)
 
-  console.log({ isAuthenticated })
-
-  console.log("MIDDLEWARE")
-
   if (pathname !== "/auth" && !isAuthenticated) {
-    console.log("NOT AUTH MIDDLEWARE")
     return NextResponse.redirect(new URL("/auth", req.url))
   }
 
