@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["scontent-bru2-1.xx.fbcdn.net"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.fbcdn.net",
+        port: "",
+      },
+    ],
   },
 }
 

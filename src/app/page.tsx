@@ -1,54 +1,42 @@
-import { cookies } from "next/headers"
-import { getAvailableDevices, getCurrentUserProfile, getPlaybackState, startResumePlayback } from "@/utils/spotify"
-import { StartResumeButton } from "@/components/start-resume-button"
-import { SignOutButton } from "@/components/signout-button"
-import { redirect } from "next/navigation"
+import { StartResumeButton } from "@/components/start-resume-button";
+import { SignOutButton } from "@/components/signout-button";
+import {
+  getAvailableDevices,
+  getCurrentUserProfile,
+  getPlaybackState,
+} from "@/actions/spotify";
 
 export default async function Home() {
-  const accessToken = cookies().get("spotify_access_token")?.value ?? ""
-  const profile = await getCurrentUserProfile(accessToken)
-  const devices = await getAvailableDevices(accessToken)
-  const playbackState = await getPlaybackState(accessToken)
-
-  async function startResume() {
-    "use server"
-
-    const accessToken = cookies().get("spotify_access_token")?.value ?? ""
-    const a = await startResumePlayback(accessToken, "87184c552c056d656bba57dc1ac9b0130a9f8134")
-  }
-
-  async function signOut() {
-    "use server"
-
-    cookies().delete("spotify_refresh_token")
-    cookies().delete("spotify_access_token")
-
-    redirect("/auth")
-  }
+  const profile = await getCurrentUserProfile();
+  const devices = await getAvailableDevices();
+  const playbackState = await getPlaybackState();
 
   return (
     <div className="w-full">
-      <div className="text-center bg-gradient-to-b from-[rgb(16,16,16)] to">
-        <p className="italic text-sm py-1">Veillez à garder l&apos;application ouverte sur le compte connecté </p>
+      <div className="to bg-gradient-to-b from-[rgb(16,16,16)] text-center">
+        <p className="py-1 text-sm italic">
+          Veillez à garder l&apos;application ouverte sur le compte connecté{" "}
+        </p>
       </div>
-      <div className="px-8 py-2 flex justify-between items-center mb-10">
+      <div className="mb-10 flex items-center justify-between px-8 py-2">
         {profile?.images?.[0] ? (
-          <SignOutButton signOut={signOut} profile={profile} />
+          <SignOutButton profile={profile} />
         ) : (
           <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-[#24d44e] rounded-full" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#24d44e]" />
             <p>
-              Connecté en tant que <span className="font-medium">{profile?.display_name}</span>
+              Connecté en tant que{" "}
+              <span className="font-medium">{profile?.display_name}</span>
             </p>
           </div>
         )}
         <div></div>
       </div>
 
-      <div className="space-y-2 mb-10">
+      <div className="mb-10 space-y-2">
         <h2>Appareils disponibles</h2>
         <ul>
-          {devices?.devices?.map(device => (
+          {devices?.devices?.map((device) => (
             <li key={device.id}>
               - {device.name} = {device.id}
             </li>
@@ -56,7 +44,7 @@ export default async function Home() {
         </ul>
       </div>
       <div className="mb-10">
-        <StartResumeButton startResume={startResume} />
+        <StartResumeButton />
       </div>
       <div>
         <h2>Etat de lecture</h2>
@@ -71,5 +59,5 @@ export default async function Home() {
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,27 +1,30 @@
-import { requestAccessToken } from "@/utils/spotify-authorizations"
-import { NextRequest, NextResponse } from "next/server"
+import { requestAccessToken } from "@/actions/auth";
+import { encrypt } from "@/utils/auth";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url)
+  const url = new URL(req.url);
 
-  const code = url.searchParams.get("code")
+  const code = url.searchParams.get("code");
 
-  const accessToken = await requestAccessToken({ code: code ?? "" })
+  const accessToken = await requestAccessToken({ code: code ?? "" });
 
-  const response = NextResponse.redirect(url.origin)
+  const response = NextResponse.redirect(url.origin);
+
+  const expiresAt = new Date(Date.now() + accessToken.expires_in * 1000);
+
+  const session = await encrypt({
+    spotify_access_token: accessToken.access_token,
+    spotify_refresh_token: accessToken.refresh_token,
+    expires_at: expiresAt,
+  });
 
   response.cookies.set({
-    name: "spotify_access_token",
-    value: accessToken.access_token,
+    name: "session",
+    value: session,
     httpOnly: true,
-    maxAge: accessToken.expires_in,
-  })
+    expires: expiresAt,
+  });
 
-  response.cookies.set({
-    name: "spotify_refresh_token",
-    value: accessToken.refresh_token,
-    httpOnly: true,
-  })
-
-  return response
+  return response;
 }
