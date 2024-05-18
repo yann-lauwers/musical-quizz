@@ -5,6 +5,10 @@ import {
   getCurrentUserProfile,
   getPlaybackState,
 } from "@/actions/spotify";
+import { SubmitButton } from "@/components/submit-button";
+import { Search, X } from "lucide-react";
+import { Button } from "@/components/button";
+import { PlaylistIDForm } from "@/components/playlistID-form";
 
 export default async function Home() {
   const profile = await getCurrentUserProfile();
@@ -46,7 +50,7 @@ export default async function Home() {
       <div className="mb-10">
         <StartResumeButton />
       </div>
-      <div>
+      <div className="mb-10">
         <h2>Etat de lecture</h2>
         {playbackState ? (
           <div>
@@ -58,6 +62,7 @@ export default async function Home() {
           <p>Aucune lecture en cours</p>
         )}
       </div>
+      <PlaylistIDForm />
     </div>
   );
 }

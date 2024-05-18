@@ -1,10 +1,11 @@
 "use server";
 
-import { getAccessToken, verifySession } from "./auth";
+import { verifySession } from "./auth";
 import {
   availableDevicesSchema,
   currentUserProfileSchema,
   playerStateSchema,
+  playlistSchema,
 } from "../schemas/spotify";
 import { SPOTIFY_API_ROOT_URL } from "../constants/spotify";
 import { z } from "zod";
@@ -125,9 +126,46 @@ const startResumePlayback = async (
   }
 };
 
+const getPlaylist = async (
+  playlistID: string,
+): Promise<z.infer<typeof playlistSchema> | null> => {
+  const { isAuth, spotifyAccessToken } = await verifySession();
+  if (!isAuth) return null;
+
+  const headers = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${spotifyAccessToken}`,
+      ["Content-Type"]: "application/json",
+    },
+  };
+
+  try {
+    const request = await fetch(
+      SPOTIFY_API_ROOT_URL + "/playlists/" + playlistID,
+      headers,
+    );
+    const playlist = await request.json();
+
+    console.log({ request, playlist });
+    if (playlist.error.status === 400) {
+      if (playlist.error.message === "Invalid base62 id") {
+        // todo handle error management
+        // return { message: "Invalid playlist ID" };
+      }
+    }
+    const parsedPlaylist = playlistSchema.parse(playlist);
+    return parsedPlaylist;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
 export {
   getCurrentUserProfile,
   getAvailableDevices,
   getPlaybackState,
   startResumePlayback,
+  getPlaylist,
 };

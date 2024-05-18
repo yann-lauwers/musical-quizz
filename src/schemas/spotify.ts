@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const spotifyAccessTokenSchema = z.object({
   access_token: z.string(),
@@ -6,14 +6,14 @@ export const spotifyAccessTokenSchema = z.object({
   expires_in: z.number(),
   refresh_token: z.string(),
   scope: z.string(),
-})
+});
 
 export const spotifyRefreshTokenSchema = z.object({
   access_token: z.string(),
   token_type: z.literal("Bearer"),
   expires_in: z.number(),
   scope: z.string(),
-})
+});
 
 export const currentUserProfileSchema = z.object({
   country: z.string(),
@@ -27,11 +27,13 @@ export const currentUserProfileSchema = z.object({
   followers: z.object({ href: z.string().nullable(), total: z.number() }),
   href: z.string(),
   id: z.string(),
-  images: z.array(z.object({ url: z.string(), height: z.number(), width: z.number() })),
+  images: z.array(
+    z.object({ url: z.string(), height: z.number(), width: z.number() }),
+  ),
   product: z.string(),
   type: z.string(),
   uri: z.string(),
-})
+});
 
 export const availableDevicesSchema = z.object({
   devices: z
@@ -45,10 +47,10 @@ export const availableDevicesSchema = z.object({
         type: z.string(),
         volume_percent: z.number(),
         supports_volume: z.boolean(),
-      })
+      }),
     )
     .optional(),
-})
+});
 
 export const playerStateSchema = z.object({
   device: z.object({
@@ -83,7 +85,9 @@ export const playerStateSchema = z.object({
         external_urls: z.object({ spotify: z.string() }),
         href: z.string(),
         id: z.string(),
-        images: z.array(z.object({ url: z.string(), height: z.number(), width: z.number() })),
+        images: z.array(
+          z.object({ url: z.string(), height: z.number(), width: z.number() }),
+        ),
         name: z.string(),
         release_date: z.string(),
         release_date_precision: z.string(),
@@ -98,22 +102,32 @@ export const playerStateSchema = z.object({
             name: z.string(),
             type: z.string(),
             uri: z.string(),
-          })
+          }),
         ),
       }),
       artists: z.array(
         z.object({
           external_urls: z.object({ spotify: z.string() }),
-          followers: z.object({ href: z.string(), total: z.number() }).optional(),
+          followers: z
+            .object({ href: z.string(), total: z.number() })
+            .optional(),
           genres: z.array(z.string()).optional(),
           href: z.string(),
           id: z.string(),
-          images: z.array(z.object({ url: z.string(), height: z.number(), width: z.number() })).optional(),
+          images: z
+            .array(
+              z.object({
+                url: z.string(),
+                height: z.number(),
+                width: z.number(),
+              }),
+            )
+            .optional(),
           name: z.string(),
           popularity: z.number().optional(),
           type: z.string(),
           uri: z.string(),
-        })
+        }),
       ),
       available_markets: z.array(z.string()),
       disc_number: z.number(),
@@ -152,4 +166,127 @@ export const playerStateSchema = z.object({
     toggling_repeat_track: z.boolean().optional(),
     transferring_playback: z.boolean().optional(),
   }),
-})
+});
+
+export const playlistSchema = z.object({
+  collaborative: z.boolean().optional(),
+  description: z.string().optional(),
+  external_urls: z.object({ spotify: z.string() }).optional(),
+  followers: z.object({ href: z.string(), total: z.number() }),
+  href: z.string(),
+  id: z.string(),
+  images: z.array(
+    z.object({ url: z.string(), height: z.number(), width: z.number() }),
+  ),
+  name: z.string(),
+  owner: z.object({
+    external_urls: z.object({ spotify: z.string() }),
+    followers: z.object({ href: z.string(), total: z.number() }),
+    href: z.string(),
+    id: z.string(),
+    type: z.string(),
+    uri: z.string(),
+    display_name: z.string(),
+  }),
+  public: z.boolean(),
+  snapshot_id: z.string(),
+  tracks: z.object({
+    href: z.string(),
+    limit: z.number(),
+    next: z.string(),
+    offset: z.number(),
+    previous: z.string(),
+    total: z.number(),
+    items: z.array(
+      z.object({
+        added_at: z.string(),
+        added_by: z.object({
+          external_urls: z.object({ spotify: z.string() }),
+          followers: z.object({ href: z.string(), total: z.number() }),
+          href: z.string(),
+          id: z.string(),
+          type: z.string(),
+          uri: z.string(),
+        }),
+        is_local: z.boolean(),
+        track: z.object({
+          album: z.object({
+            album_type: z.string(),
+            total_tracks: z.number(),
+            available_markets: z.array(z.string()),
+            external_urls: z.object({ spotify: z.string() }),
+            href: z.string(),
+            id: z.string(),
+            images: z.array(
+              z.object({
+                url: z.string(),
+                height: z.number(),
+                width: z.number(),
+              }),
+            ),
+            name: z.string(),
+            release_date: z.string(),
+            release_date_precision: z.string(),
+            restrictions: z.object({ reason: z.string() }),
+            type: z.string(),
+            uri: z.string(),
+            artists: z.array(
+              z.object({
+                external_urls: z.object({ spotify: z.string() }),
+                href: z.string(),
+                id: z.string(),
+                name: z.string(),
+                type: z.string(),
+                uri: z.string(),
+              }),
+            ),
+          }),
+          artists: z.array(
+            z.object({
+              external_urls: z.object({ spotify: z.string() }),
+              followers: z.object({ href: z.string(), total: z.number() }),
+              genres: z.array(z.string()),
+              href: z.string(),
+              id: z.string(),
+              images: z.array(
+                z.object({
+                  url: z.string(),
+                  height: z.number(),
+                  width: z.number(),
+                }),
+              ),
+              name: z.string(),
+              popularity: z.number(),
+              type: z.string(),
+              uri: z.string(),
+            }),
+          ),
+          available_markets: z.array(z.string()),
+          disc_number: z.number(),
+          duration_ms: z.number(),
+          explicit: z.boolean(),
+          external_ids: z.object({
+            isrc: z.string(),
+            ean: z.string(),
+            upc: z.string(),
+          }),
+          external_urls: z.object({ spotify: z.string() }),
+          href: z.string(),
+          id: z.string(),
+          is_playable: z.boolean(),
+          linked_from: z.object({}),
+          restrictions: z.object({ reason: z.string() }),
+          name: z.string(),
+          popularity: z.number(),
+          preview_url: z.string(),
+          track_number: z.number(),
+          type: z.string(),
+          uri: z.string(),
+          is_local: z.boolean(),
+        }),
+      }),
+    ),
+  }),
+  type: z.string(),
+  uri: z.string(),
+});
