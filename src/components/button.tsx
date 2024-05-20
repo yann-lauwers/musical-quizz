@@ -1,14 +1,16 @@
 "use client";
 
-import { FC, PropsWithChildren } from "react";
+import { ComponentPropsWithoutRef, FC, PropsWithChildren } from "react";
 import clsx from "clsx";
 
-export const Button: FC<PropsWithChildren<{ className?: string }>> = ({
+export const Button: FC<ComponentPropsWithoutRef<"button">> = ({
+  type,
   children,
   className,
+  ...props
 }) => {
   return (
-    <button type="button" className={clsx("", className)}>
+    <button type={"button" ?? type} className={clsx("", className)} {...props}>
       {children}
     </button>
   );

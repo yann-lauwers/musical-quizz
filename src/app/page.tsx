@@ -8,7 +8,7 @@ import {
 import { SubmitButton } from "@/components/submit-button";
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/button";
-import { PlaylistIDForm } from "@/components/playlistID-form";
+import { PlaylistURLForm } from "@/components/playlistID-form";
 
 export default async function Home() {
   const profile = await getCurrentUserProfile();
@@ -62,7 +62,7 @@ export default async function Home() {
           <p>Aucune lecture en cours</p>
         )}
       </div>
-      <PlaylistIDForm />
+      <PlaylistURLForm />
     </div>
   );
 }

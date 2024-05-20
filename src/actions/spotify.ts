@@ -9,6 +9,7 @@ import {
 } from "../schemas/spotify";
 import { SPOTIFY_API_ROOT_URL } from "../constants/spotify";
 import { z } from "zod";
+import { ERROR_MESSAGE } from "@/constants/errors";
 
 const getCurrentUserProfile = async (): Promise<z.infer<
   typeof currentUserProfileSchema
@@ -126,39 +127,60 @@ const startResumePlayback = async (
   }
 };
 
+export type ReturnType<T> =
+  | {
+      status: "error";
+      message: string;
+    }
+  | {
+      status: "success";
+      content: T;
+    };
+
 const getPlaylist = async (
   playlistID: string,
-): Promise<z.infer<typeof playlistSchema> | null> => {
+): Promise<ReturnType<z.infer<typeof playlistSchema>>> => {
   const { isAuth, spotifyAccessToken } = await verifySession();
-  if (!isAuth) return null;
-
-  const headers = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${spotifyAccessToken}`,
-      ["Content-Type"]: "application/json",
-    },
-  };
+  if (!isAuth) return { status: "error", message: "Unauthorized" };
 
   try {
+    const headers = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${spotifyAccessToken}`,
+        ["Content-Type"]: "application/json",
+      },
+    };
+
     const request = await fetch(
       SPOTIFY_API_ROOT_URL + "/playlists/" + playlistID,
       headers,
     );
+
     const playlist = await request.json();
 
-    console.log({ request, playlist });
-    if (playlist.error.status === 400) {
-      if (playlist.error.message === "Invalid base62 id") {
-        // todo handle error management
-        // return { message: "Invalid playlist ID" };
-      }
+    if (
+      playlist.error?.status === 400 &&
+      playlist.error.message === "Invalid base62 id"
+    ) {
+      throw new Error(ERROR_MESSAGE.spotify.getPlaylistFromId);
     }
-    const parsedPlaylist = playlistSchema.parse(playlist);
-    return parsedPlaylist;
+
+    const parsedPlaylist = playlistSchema.safeParse(playlist);
+
+    if (!parsedPlaylist.success) {
+      console.log(parsedPlaylist.error.errors);
+      throw new Error(ERROR_MESSAGE.unknown_error);
+    }
+
+    return { status: "success", content: parsedPlaylist.data };
   } catch (err) {
-    console.error(err);
-    return null;
+    const error = err as Error;
+    console.error(error.message);
+    return {
+      status: "error",
+      message: error.message ?? ERROR_MESSAGE.unknown_error,
+    };
   }
 };
 
