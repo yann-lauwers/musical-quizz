@@ -8,7 +8,7 @@ import { useFormState } from "react-dom";
 import { playlistSchema } from "@/schemas/spotify";
 import { z } from "zod";
 import { getPlaylist } from "@/actions/spotify";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { ERROR_MESSAGE } from "@/constants/errors";
 
 // https://nehalist.io/react-hook-form-with-nextjs-server-actions/
@@ -25,10 +25,10 @@ export const PlaylistURLForm = () => {
 
   const { register, setValue } = useForm<PlaylistURLForm>();
 
-  const [state, formAction] = useFormState<State, FormData>(
-    async (prevState: State | null, data: FormData): Promise<State | null> => {
-      console.log({ prevState });
+  const [isPending, startTransition] = useTransition();
 
+  const [state, formAction] = useFormState<State, FormData>(
+    async (_: State | null, data: FormData): Promise<State | null> => {
       const rawFormData = {
         playlistURL: data.get("playlistURL") as string,
       };
@@ -66,11 +66,16 @@ export const PlaylistURLForm = () => {
 
   return (
     <>
-      <form action={formAction} className="flex flex-col items-center gap-4">
+      <form
+        action={(e) => {
+          startTransition(() => formAction(e));
+        }}
+        className="flex flex-col items-center gap-4"
+      >
         <div className="relative rounded-full hover:brightness-150">
           <input
             {...register("playlistURL")}
-            className="w-full rounded-full bg-[#1c1c1c] py-4 pl-12 pr-10 text-white placeholder:text-[#464646] hover:ring-1 hover:ring-[#464646] focus:outline-none focus:ring-2 focus:ring-white md:w-[500px]"
+            className="w-full rounded-full bg-[#1c1c1c] py-2.5 pl-12 pr-10 text-white placeholder:text-[#464646] hover:ring-1 hover:ring-[#464646] focus:outline-none focus:ring-2 focus:ring-white md:w-96"
             placeholder="ID de la playlist"
           />
           <SubmitButton className="absolute inset-y-0 left-0 flex items-center pl-3 pr-2 text-[#b0b0b0]">
@@ -84,6 +89,7 @@ export const PlaylistURLForm = () => {
           </Button>
         </div>
       </form>
+      {isPending && <p>Loading</p>}
       {state && <p>{state.name}</p>}
       {error && <p className="text-red-500">{error}</p>}
     </>

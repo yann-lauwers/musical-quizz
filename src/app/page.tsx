@@ -5,36 +5,37 @@ import {
   getCurrentUserProfile,
   getPlaybackState,
 } from "@/actions/spotify";
-import { SubmitButton } from "@/components/submit-button";
-import { Search, X } from "lucide-react";
-import { Button } from "@/components/button";
 import { PlaylistURLForm } from "@/components/playlistID-form";
+import { Select } from "@/components/select";
 
 export default async function Home() {
   const profile = await getCurrentUserProfile();
   const devices = await getAvailableDevices();
   const playbackState = await getPlaybackState();
 
+  const log = async (e: string) => {
+    "use server";
+    console.log(e);
+  };
+
   return (
     <div className="w-full">
-      <div className="to bg-gradient-to-b from-[rgb(16,16,16)] text-center">
-        <p className="py-1 text-sm italic">
-          Veillez à garder l&apos;application ouverte sur le compte connecté{" "}
-        </p>
-      </div>
-      <div className="mb-10 flex items-center justify-between px-8 py-2">
-        {profile?.images?.[0] ? (
+      <Banner />
+      <div className="mb-10 flex items-center justify-between gap-8 px-8 py-4">
+        <div className="flex items-center gap-8">
           <SignOutButton profile={profile} />
-        ) : (
-          <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-[#24d44e]" />
-            <p>
-              Connecté en tant que{" "}
-              <span className="font-medium">{profile?.display_name}</span>
-            </p>
-          </div>
-        )}
-        <div></div>
+          <PlaylistURLForm />
+        </div>
+        <Select
+          name="select_device"
+          onChange={log}
+          options={
+            devices?.devices?.map((device) => ({
+              id: device.id,
+              label: device.name,
+            })) ?? []
+          }
+        />
       </div>
 
       <div className="mb-10 space-y-2">
@@ -62,7 +63,16 @@ export default async function Home() {
           <p>Aucune lecture en cours</p>
         )}
       </div>
-      <PlaylistURLForm />
     </div>
   );
 }
+
+const Banner = () => {
+  return (
+    <div className="bg-[rgb(16,16,16)] py-2 text-center">
+      <p className="text-sm italic">
+        Veillez à garder l&apos;application ouverte sur le compte connecté{" "}
+      </p>
+    </div>
+  );
+};

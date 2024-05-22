@@ -10,7 +10,7 @@ import { z } from "zod";
 export const SignOutButton = ({
   profile,
 }: {
-  profile: z.infer<typeof currentUserProfileSchema>;
+  profile: z.infer<typeof currentUserProfileSchema> | null;
 }) => {
   const [isPending, startTransition] = useTransition();
 
@@ -25,16 +25,20 @@ export const SignOutButton = ({
     >
       {isPending ? (
         <Spinner className="h-6 w-6" />
-      ) : (
+      ) : profile?.images?.[0] ? (
         <Image
           src={profile?.images?.[0].url}
           width={profile?.images?.[0].width}
           height={profile?.images?.[0].height}
           alt="profil spotify"
-          className="h-6 w-6 rounded-full"
+          className="h-10 w-10 rounded-full"
         />
+      ) : (
+        <div className="flex items-center gap-2">
+          <div className="h-1.5 w-1.5 rounded-full bg-[#24d44e]" />
+          <p className="font-medium">{profile?.display_name}</p>
+        </div>
       )}
-      <p className="font-medium">{profile?.display_name}</p>
     </button>
   );
 };
