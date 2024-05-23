@@ -6,17 +6,12 @@ import {
   getPlaybackState,
 } from "@/actions/spotify";
 import { PlaylistURLForm } from "@/components/playlistID-form";
-import { Select } from "@/components/select";
+import { SelectDevices } from "@/components/select-device";
 
 export default async function Home() {
   const profile = await getCurrentUserProfile();
   const devices = await getAvailableDevices();
   const playbackState = await getPlaybackState();
-
-  const log = async (e: string) => {
-    "use server";
-    console.log(e);
-  };
 
   return (
     <div className="w-full">
@@ -26,27 +21,7 @@ export default async function Home() {
           <SignOutButton profile={profile} />
           <PlaylistURLForm />
         </div>
-        <Select
-          name="select_device"
-          onChange={log}
-          options={
-            devices?.devices?.map((device) => ({
-              id: device.id,
-              label: device.name,
-            })) ?? []
-          }
-        />
-      </div>
-
-      <div className="mb-10 space-y-2">
-        <h2>Appareils disponibles</h2>
-        <ul>
-          {devices?.devices?.map((device) => (
-            <li key={device.id}>
-              - {device.name} = {device.id}
-            </li>
-          ))}
-        </ul>
+        <SelectDevices devices={devices} />
       </div>
       <div className="mb-10">
         <StartResumeButton />
