@@ -77,13 +77,14 @@ export const PlaylistURLForm = () => {
             {...register("playlistURL")}
             className="w-full rounded-full bg-[#1c1c1c] py-2.5 pl-12 pr-10 text-white placeholder:text-[#464646] hover:ring-1 hover:ring-[#464646] focus:outline-none focus:ring-2 focus:ring-white md:w-96"
             placeholder="ID de la playlist"
+            defaultValue="https://open.spotify.com/playlist/37i9dQZF1DX8LIZNmf5qj3?si=fcc11655b60b4e69"
           />
-          <SubmitButton className="absolute inset-y-0 left-0 flex items-center pl-3 pr-2 text-[#b0b0b0]">
+          <SubmitButton className="absolute inset-y-0 left-0 flex items-center rounded-l-full pl-3 pr-2 text-[#b0b0b0] focus:outline-none focus:ring-2 focus:ring-white">
             <Search />
           </SubmitButton>
           <Button
             onClick={() => setValue("playlistURL", null)}
-            className="absolute inset-y-0 right-0 flex items-center pl-2 pr-3 text-[#b0b0b0]"
+            className="absolute inset-y-0 right-0 flex items-center rounded-r-full pl-2 pr-3 text-[#b0b0b0] focus:outline-none focus:ring-2 focus:ring-white"
           >
             <X />
           </Button>

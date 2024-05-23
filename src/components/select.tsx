@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEventHandler, FC } from "react";
+import { FC } from "react";
 
 export const Select: FC<{
   options: { id: string; label: string }[];

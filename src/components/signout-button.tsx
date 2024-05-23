@@ -21,7 +21,7 @@ export const SignOutButton = ({
           signOut();
         })
       }
-      className="flex items-center gap-2"
+      className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-white"
     >
       {isPending ? (
         <Spinner className="h-6 w-6" />
