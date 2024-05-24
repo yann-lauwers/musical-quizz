@@ -69,7 +69,7 @@ const requestAccessToken = async ({
   code,
 }: {
   code: string;
-}): Promise<z.infer<typeof spotifyAccessTokenSchema>> => {
+}): Promise<z.infer<typeof spotifyAccessTokenSchema> | null> => {
   const url = "https://accounts.spotify.com/api/token";
 
   const payload = {
@@ -84,13 +84,17 @@ const requestAccessToken = async ({
       redirect_uri: "http://localhost:3000/api/callback",
     }),
   };
+  try {
+    const body = await fetch(url, payload);
+    const response = await body.json();
 
-  const body = await fetch(url, payload);
-  const response = await body.json();
+    const parsedResponse = spotifyAccessTokenSchema.parse(response);
 
-  const parsedResponse = spotifyAccessTokenSchema.parse(response);
-
-  return parsedResponse;
+    return parsedResponse;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 };
 
 // https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens
@@ -127,10 +131,4 @@ const refreshAccessToken = async ({
   }
 };
 
-export {
-  signOut,
-  getSession as getAccessToken,
-  authorize,
-  requestAccessToken,
-  refreshAccessToken,
-};
+export { signOut, authorize, requestAccessToken, refreshAccessToken };
