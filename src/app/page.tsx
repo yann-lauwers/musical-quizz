@@ -1,9 +1,12 @@
+import { Play } from "next/font/google";
+
 import {
   getAvailableDevices,
   getCurrentUserProfile,
   getPlaybackState,
 } from "@/actions/spotify";
 import { PlaylistURLForm } from "@/components/playlistID-form";
+import { PlaylistInfo } from "@/components/playlistInfo";
 import { SelectDevices } from "@/components/select-device";
 import { SignOutButton } from "@/components/signout-button";
 import { StartResumeButton } from "@/components/start-resume-button";
@@ -27,6 +30,7 @@ export default async function Home() {
         <StartResumeButton />
       </div>
       <div className="mb-10">
+        <PlaylistInfo />
         <h2>Etat de lecture</h2>
         {playbackState ? (
           <div>

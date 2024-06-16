@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { getPlaylist } from "@/actions/spotify";
+import { useAppDispatch } from "@/app/hooks/store";
+import { setPlaylistId } from "@/app/slices/music.slice";
 import { Button } from "@/components/button";
 import { SubmitButton } from "@/components/submit-button";
 import { ERROR_MESSAGE } from "@/constants/errors";
@@ -14,7 +16,7 @@ import { playlistSchema } from "@/schemas/spotify";
 
 // https://nehalist.io/react-hook-form-with-nextjs-server-actions/
 
-export type State = z.infer<typeof playlistSchema> | null;
+type State = z.infer<typeof playlistSchema> | null;
 
 const playlistURLFormSchema = z.object({
   playlistURL: z.string().nullable(),
@@ -27,6 +29,8 @@ export const PlaylistURLForm = () => {
   const { register, setValue } = useForm<PlaylistURLForm>();
 
   const [isPending, startTransition] = useTransition();
+
+  const dispatch = useAppDispatch();
 
   const [state, formAction] = useFormState<State, FormData>(
     async (_: State | null, data: FormData): Promise<State | null> => {
@@ -59,6 +63,8 @@ export const PlaylistURLForm = () => {
       }
 
       if (error) setError(null);
+
+      dispatch(setPlaylistId(playlistQuery.content));
 
       return playlistQuery.content;
     },
