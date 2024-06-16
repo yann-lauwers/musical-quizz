@@ -1,6 +1,6 @@
 "use server";
 
-import { verifySession } from "./auth";
+import { verifySession } from "@/actions/auth";
 import {
   availableDevicesSchema,
   currentUserProfileSchema,

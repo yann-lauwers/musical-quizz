@@ -1,6 +1,6 @@
 "use client";
 
-import { ComponentPropsWithoutRef, FC, PropsWithChildren } from "react";
+import { ComponentPropsWithoutRef, FC } from "react";
 import clsx from "clsx";
 
 export const Button: FC<ComponentPropsWithoutRef<"button">> = ({

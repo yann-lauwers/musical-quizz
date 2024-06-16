@@ -3,6 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import { z } from "zod";
+import { AUTH_COOKIE_NAME } from "@/constants/auth";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -35,9 +36,9 @@ export async function decrypt(session: string | undefined = "") {
 }
 
 export const getSession = () => {
-  return cookies().get("session")?.value ?? "";
+  return cookies().get(AUTH_COOKIE_NAME)?.value ?? "";
 };
 
 export const deleteSession = () => {
-  cookies().delete("session");
+  cookies().delete(AUTH_COOKIE_NAME);
 };

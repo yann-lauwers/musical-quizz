@@ -1,6 +1,6 @@
 "use client";
 
-import { Select } from "./inputs/select";
+import { Select } from "@/components/inputs/select";
 import { FC, useOptimistic, useTransition } from "react";
 import { z } from "zod";
 import { availableDevicesSchema } from "@/schemas/spotify";

@@ -1,8 +1,8 @@
 "use client";
 
 import { Search, X } from "lucide-react";
-import { SubmitButton } from "./submit-button";
-import { Button } from "./button";
+import { SubmitButton } from "@/components/submit-button";
+import { Button } from "@/components/button";
 import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
 import { playlistSchema } from "@/schemas/spotify";
