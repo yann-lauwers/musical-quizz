@@ -1,11 +1,12 @@
 "use client";
 
-import { signOut } from "@/actions/auth";
-import { currentUserProfileSchema } from "@/schemas/spotify";
-import Spinner from "@/icons/spinner";
 import Image from "next/image";
 import { useTransition } from "react";
 import { z } from "zod";
+
+import { signOut } from "@/actions/auth";
+import Spinner from "@/icons/spinner";
+import { currentUserProfileSchema } from "@/schemas/spotify";
 
 export const SignOutButton = ({
   profile,

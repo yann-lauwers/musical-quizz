@@ -1,8 +1,9 @@
+import { NextRequest, NextResponse } from "next/server";
+
 import { requestAccessToken } from "@/actions/auth";
 import { AUTH_COOKIE_NAME } from "@/constants/auth";
 import { ERROR_MESSAGE } from "@/constants/errors";
 import { encrypt } from "@/utils/auth";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);

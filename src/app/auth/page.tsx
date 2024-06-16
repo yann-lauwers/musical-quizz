@@ -1,9 +1,10 @@
 "use client";
 
-import { authorize } from "@/actions/auth";
-import Spinner from "@/icons/spinner";
 import clsx from "clsx";
 import { useTransition } from "react";
+
+import { authorize } from "@/actions/auth";
+import Spinner from "@/icons/spinner";
 
 export default function Home() {
   const [isPending, startTransition] = useTransition();

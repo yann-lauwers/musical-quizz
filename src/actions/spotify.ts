@@ -1,15 +1,17 @@
 "use server";
 
+import { z } from "zod";
+
 import { verifySession } from "@/actions/auth";
+import { ERROR_MESSAGE } from "@/constants/errors";
+
+import { SPOTIFY_API_ROOT_URL } from "../constants/spotify";
 import {
   availableDevicesSchema,
   currentUserProfileSchema,
   playerStateSchema,
   playlistSchema,
 } from "../schemas/spotify";
-import { SPOTIFY_API_ROOT_URL } from "../constants/spotify";
-import { z } from "zod";
-import { ERROR_MESSAGE } from "@/constants/errors";
 
 const getCurrentUserProfile = async (): Promise<z.infer<
   typeof currentUserProfileSchema

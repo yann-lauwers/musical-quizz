@@ -1,11 +1,12 @@
 "use client";
 
-import { Select } from "@/components/inputs/select";
-import { FC, useOptimistic, useTransition } from "react";
-import { z } from "zod";
-import { availableDevicesSchema } from "@/schemas/spotify";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { FC, useOptimistic, useTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { z } from "zod";
+
+import { Select } from "@/components/inputs/select";
+import { availableDevicesSchema } from "@/schemas/spotify";
 
 export const SelectDevices: FC<{
   devices: z.infer<typeof availableDevicesSchema> | null;

@@ -1,5 +1,3 @@
-import { StartResumeButton } from "@/components/start-resume-button";
-import { SignOutButton } from "@/components/signout-button";
 import {
   getAvailableDevices,
   getCurrentUserProfile,
@@ -7,6 +5,8 @@ import {
 } from "@/actions/spotify";
 import { PlaylistURLForm } from "@/components/playlistID-form";
 import { SelectDevices } from "@/components/select-device";
+import { SignOutButton } from "@/components/signout-button";
+import { StartResumeButton } from "@/components/start-resume-button";
 
 export default async function Home() {
   const profile = await getCurrentUserProfile();

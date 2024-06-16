@@ -1,12 +1,13 @@
 "use server";
 
+import { redirect } from "next/navigation";
+import { z } from "zod";
+
 import { SCOPE } from "@/constants/spotify";
 import {
   spotifyAccessTokenSchema,
   spotifyRefreshTokenSchema,
 } from "@/schemas/spotify";
-import { redirect } from "next/navigation";
-import { z } from "zod";
 import { decrypt, deleteSession, getSession } from "@/utils/auth";
 
 // https://nextjs.org/docs/app/building-your-application/authentication#authorization

@@ -1,8 +1,8 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
-import { FC, PropsWithChildren } from "react";
 import clsx from "clsx";
+import { FC, PropsWithChildren } from "react";
+import { useFormStatus } from "react-dom";
 
 export const SubmitButton: FC<PropsWithChildren<{ className?: string }>> = ({
   children,

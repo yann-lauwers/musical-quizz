@@ -1,7 +1,7 @@
 "use client";
 
-import { ComponentPropsWithoutRef, FC } from "react";
 import clsx from "clsx";
+import { ComponentPropsWithoutRef, FC } from "react";
 
 export const Button: FC<ComponentPropsWithoutRef<"button">> = ({
   type,
